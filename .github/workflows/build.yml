@@ -11,9 +11,13 @@ jobs:
           channel: 'stable'
       - name: Fix plugin SDK versions
         run: |
-          find app -name "pubspec.yaml" -exec sed -i 's/\^3\.10\.0/>=3.4.0 <4.0.0/g' {} \;
-          find app -name "pubspec.yaml" -exec sed -i 's/\^3\.12\.2/>=3.4.0 <4.0.0/g' {} \;
-          cat app/plugins/tor_hidden_service/pubspec.yaml
+          sed -i 's/sdk: \^3\.12\.2/sdk: ">=3.4.0 <4.0.0"/g' app/pubspec.yaml
+          sed -i 's/sdk: \^3\.10\.0/sdk: ">=3.4.0 <4.0.0"/g' app/plugins/tor_hidden_service/pubspec.yaml
+          sed -i 's/sdk: >=3\.4\.0 <4\.0\.0/sdk: ">=3.4.0 <4.0.0"/g' app/plugins/tor_hidden_service/pubspec.yaml
+          echo "--- Fixed main pubspec ---"
+          cat app/pubspec.yaml | grep -A2 environment
+          echo "--- Fixed plugin pubspec ---"
+          cat app/plugins/tor_hidden_service/pubspec.yaml | grep -A2 environment
       - name: Get dependencies
         working-directory: app
         run: flutter pub get
